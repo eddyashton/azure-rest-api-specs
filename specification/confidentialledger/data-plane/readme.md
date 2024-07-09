@@ -11,7 +11,7 @@ Please look to the files `Microsoft.ConfidentialLedger/preview/2023-01-18-previe
 
 > see https://aka.ms/autorest
 
-``` yaml
+```yaml
 tag: package-2024-01-26-preview-identity
 openapi-type: data-plane
 ```
@@ -99,6 +99,15 @@ input-file:
   - Microsoft.ManagedCcf/preview/2023-06-01-preview/mccfgov.json
 ```
 
+### Tag: package-2024-07-01-mccf
+
+These settings apply only when `--tag=package-2024-07-01-mccf` is specified on the command line.
+
+```yaml $(tag) == 'package-2024-07-01-mccf'
+input-file:
+  - Microsoft.ManagedCcf/preview/2024-07-01/mccfgov.json
+```
+
 ### Tag: package-2024-01-11-preview-codetransparency
 
 These settings apply only when `--tag=package-2024-01-11-preview-codetransparency` is specified on the command line.
@@ -110,7 +119,7 @@ suppressions:
   - code: PageableOperation
     from: cts.json
     reason: Not pageable
-  - code:  PaginationResponse
+  - code: PaginationResponse
     from: cts.json
     reason: Defined as in the RFC but the remaining ones are not pageable
   - code: PathParameterSchema
@@ -140,3 +149,4 @@ These settings apply only when `--tag=package-2024-01-26-preview-identity` is sp
 ```yaml $(tag) == 'package-2024-01-26-preview-identity'
 input-file:
   - Microsoft.ConfidentialLedger/preview/2024-01-26-preview/identityservice.json
+```
