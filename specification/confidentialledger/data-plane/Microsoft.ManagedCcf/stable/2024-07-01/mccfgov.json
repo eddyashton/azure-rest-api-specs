@@ -841,6 +841,92 @@
         }
       }
     },
+    "/gov/service/js-modules": {
+      "get": {
+        "operationId": "ServiceState_ListJsModules",
+        "description": "Retrieve list of all modules constituting the current app.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/PagedJsModule"
+            },
+            "headers": {
+              "x-ms-ccf-transaction-id": {
+                "type": "string",
+                "description": "Identifier for transaction this response was read from. The service state may be altered by other write requests. Reads at the same transactionId describe a consistent single point in the service history.",
+                "pattern": "^[0-9]+\\.[0-9]+$"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        },
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink"
+        }
+      }
+    },
+    "/gov/service/js-modules/{moduleName}": {
+      "get": {
+        "operationId": "ServiceState_GetJsModule",
+        "description": "Retrieve single module of current app, by name.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
+          },
+          {
+            "name": "moduleName",
+            "in": "path",
+            "description": "Name of module, potentially including path elements.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/ServiceState.JsModule"
+            },
+            "headers": {
+              "x-ms-ccf-transaction-id": {
+                "type": "string",
+                "description": "Identifier for transaction this response was read from. The service state may be altered by other write requests. Reads at the same transactionId describe a consistent single point in the service history.",
+                "pattern": "^[0-9]+\\.[0-9]+$"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Azure.Core.Foundations.ErrorResponse"
+            },
+            "headers": {
+              "x-ms-error-code": {
+                "type": "string",
+                "description": "String error code indicating what went wrong."
+              }
+            }
+          }
+        }
+      }
+    },
     "/gov/service/jwk": {
       "get": {
         "operationId": "ServiceState_GetJwkInfo",
@@ -1242,6 +1328,28 @@
           "description": "Inner error."
         }
       }
+    },
+    "PagedJsModule": {
+      "type": "object",
+      "description": "Paged collection of JsModule items",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The JsModule items on this page",
+          "items": {
+            "$ref": "#/definitions/ServiceState.JsModule"
+          },
+          "x-ms-identifiers": []
+        },
+        "nextLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link to the next page of items"
+        }
+      },
+      "required": [
+        "value"
+      ]
     },
     "PagedMember": {
       "type": "object",
@@ -1707,6 +1815,27 @@
           }
         ]
       }
+    },
+    "ServiceState.JsModule": {
+      "type": "object",
+      "description": "Describes JavaScript source code corresponding to a given module name.",
+      "properties": {
+        "moduleName": {
+          "type": "string",
+          "description": "Name of module, potentially including path elements.",
+          "x-ms-mutability": [
+            "read"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "description": "JavaScript source code of this module."
+        }
+      },
+      "required": [
+        "moduleName",
+        "source"
+      ]
     },
     "ServiceState.JsOperations": {
       "type": "object",

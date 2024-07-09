@@ -204,12 +204,19 @@ model JsApp {
 
   @doc("The collection of endpoints exposed by the application. Keyed by path.")
   endpoints: Record<JsOperations>;
+}
 
-  // TODO:
-  // - Endpoint source?
-  // - Module source?
-  // - Engine config?
-  // - QuickJS version
+@TypeSpec.Versioning.added(Versions.`2024-07-01`)
+@TypeSpec.Rest.resource("service/js-modules")
+@doc("Describes JavaScript source code corresponding to a given module name.")
+model JsModule {
+  @doc("Name of module, potentially including path elements.")
+  @visibility("read", "query")
+  @key
+  moduleName: string;
+
+  @doc("JavaScript source code of this module.")
+  source: string;
 }
 
 /// Join policy types
@@ -397,6 +404,20 @@ interface ServiceState {
   @doc("Retrieve details of Javascript application and execution engine.")
   getJsApp is Azure.Core.StandardResourceOperations.ResourceRead<
     JsApp,
+    TxIdReadHeader
+  >;
+
+  @TypeSpec.Versioning.added(Versions.`2024-07-01`)
+  @doc("Retrieve list of all modules constituting the current app.")
+  listJsModules is Azure.Core.StandardResourceOperations.ResourceList<
+    JsModule,
+    TxIdReadHeader
+  >;
+
+  @TypeSpec.Versioning.added(Versions.`2024-07-01`)
+  @doc("Retrieve single module of current app, by name.")
+  getJsModule is Azure.Core.StandardResourceOperations.ResourceRead<
+    JsModule,
     TxIdReadHeader
   >;
 
