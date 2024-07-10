@@ -208,10 +208,20 @@ model JsApp {
 
 @TypeSpec.Versioning.added(Versions.`2024-07-01`)
 @TypeSpec.Rest.resource("service/js-modules")
-@doc("Describes JavaScript source code corresponding to a given module name.")
-model JsModule {
+@doc("Names of JS modules implementing the current app.")
+model JsModuleNames {
   @doc("Name of module, potentially including path elements.")
   @visibility("read", "query")
+  @key
+  moduleName: string;
+}
+
+@TypeSpec.Versioning.added(Versions.`2024-07-01`)
+@TypeSpec.Rest.resource("service/js-modules")
+@doc("JavaScript source code corresponding to a given module name.")
+model JsModuleResponse {
+  @doc("Name of module, potentially including path elements.")
+  @visibility("query")
   @key
   moduleName: string;
 
@@ -410,15 +420,15 @@ interface ServiceState {
   @TypeSpec.Versioning.added(Versions.`2024-07-01`)
   @doc("Retrieve list of all modules constituting the current app.")
   listJsModules is Azure.Core.StandardResourceOperations.ResourceList<
-    JsModule,
+    JsModuleNames,
     TxIdReadHeader
   >;
 
   @TypeSpec.Versioning.added(Versions.`2024-07-01`)
-  @doc("Retrieve single module of current app, by name.")
+  @doc("Retrieve single module of current app, by name. Note that the moduleName path parameter (which may contain forward slashes indicating module path segments) must be URL-escaped to register as a single URL path segment. For instance '/foo/bar.js' should become '%2Ffoo%2Fbar.js'.")
   getJsModule is Azure.Core.StandardResourceOperations.ResourceRead<
-    JsModule,
-    TxIdReadHeader
+    JsModuleResponse,
+    Azure.Core.Traits.ResponseHeadersTrait<TxIdReadHdr & JavaScriptSource>
   >;
 
   @doc("Retrieve policy data which determines whether new nodes are permitted to join the service. This describes the hardware attestations which are acceptable to the service, demonstrating a joining node is running approved code.")

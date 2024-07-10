@@ -854,7 +854,7 @@
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/PagedJsModule"
+              "$ref": "#/definitions/PagedJsModuleNames"
             },
             "headers": {
               "x-ms-ccf-transaction-id": {
@@ -885,7 +885,11 @@
     "/gov/service/js-modules/{moduleName}": {
       "get": {
         "operationId": "ServiceState_GetJsModule",
-        "description": "Retrieve single module of current app, by name.",
+        "description": "Retrieve single module of current app, by name. Note that the moduleName path parameter (which may contain forward slashes indicating module path segments) must be URL-escaped to register as a single URL path segment. For instance '/foo/bar.js' should become '%2Ffoo%2Fbar.js'.",
+        "produces": [
+          "text/javascript",
+          "application/json"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/Azure.Core.Foundations.ApiVersionParameter"
@@ -902,7 +906,7 @@
           "200": {
             "description": "The request has succeeded.",
             "schema": {
-              "$ref": "#/definitions/ServiceState.JsModule"
+              "$ref": "#/definitions/ServiceState.JsModuleResponse"
             },
             "headers": {
               "x-ms-ccf-transaction-id": {
@@ -1329,15 +1333,15 @@
         }
       }
     },
-    "PagedJsModule": {
+    "PagedJsModuleNames": {
       "type": "object",
-      "description": "Paged collection of JsModule items",
+      "description": "Paged collection of JsModuleNames items",
       "properties": {
         "value": {
           "type": "array",
-          "description": "The JsModule items on this page",
+          "description": "The JsModuleNames items on this page",
           "items": {
-            "$ref": "#/definitions/ServiceState.JsModule"
+            "$ref": "#/definitions/ServiceState.JsModuleNames"
           },
           "x-ms-identifiers": []
         },
@@ -1816,9 +1820,9 @@
         ]
       }
     },
-    "ServiceState.JsModule": {
+    "ServiceState.JsModuleNames": {
       "type": "object",
-      "description": "Describes JavaScript source code corresponding to a given module name.",
+      "description": "Names of JS modules implementing the current app.",
       "properties": {
         "moduleName": {
           "type": "string",
@@ -1826,14 +1830,22 @@
           "x-ms-mutability": [
             "read"
           ]
-        },
+        }
+      },
+      "required": [
+        "moduleName"
+      ]
+    },
+    "ServiceState.JsModuleResponse": {
+      "type": "object",
+      "description": "JavaScript source code corresponding to a given module name.",
+      "properties": {
         "source": {
           "type": "string",
           "description": "JavaScript source code of this module."
         }
       },
       "required": [
-        "moduleName",
         "source"
       ]
     },
